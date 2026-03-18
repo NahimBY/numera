@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:numera/config/theme/app_theme.dart';
 import 'package:numera/presentation/screens/methods/bisection/cubit/bisection_cubit.dart';
+import 'package:numera/presentation/screens/methods/secant/cubit/secant_cubit.dart';
+import 'package:numera/presentation/screens/methods/secant/secant_logic.dart';
 import 'config/router/app_router.dart';
 
 void main() async {
@@ -25,6 +27,9 @@ class BlocProviders extends StatelessWidget {
         ),
         BlocProvider<BisectionCubit>(
           create: (context) => BisectionCubit(),
+        ),
+        BlocProvider<SecantCubit>(
+          create: (context) => SecantCubit(SecantLogic()),
         ),
       ],
       child: MainApp(),

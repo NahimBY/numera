@@ -25,6 +25,9 @@ class CustomTextField extends StatelessWidget {
     );
 
     return TextFormField(
+      onTapOutside: (event) {
+        FocusScope.of(context).unfocus();
+      },
       controller: controller,
       keyboardType: keyboardType,
       validator: validator,
@@ -34,7 +37,10 @@ class CustomTextField extends StatelessWidget {
         hintText: hint,
         labelStyle: AppFonts.bodyText3.copyWith(color: AppColors.textDarkGray),
         hintStyle: AppFonts.bodyText3.copyWith(color: AppColors.textLightGray),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 15,
+        ),
         border: border,
         enabledBorder: border,
         focusedBorder: border.copyWith(
