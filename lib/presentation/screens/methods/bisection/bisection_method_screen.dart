@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:heroicons/heroicons.dart';
 import 'package:numera/config/theme/app_theme.dart';
 import 'package:numera/widgets/custom_text_field.dart';
 import 'package:numera/widgets/custom_button.dart';
@@ -77,6 +78,36 @@ class _BisectionMethodView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryDark.withOpacity(0.05),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: AppColors.primaryDark.withOpacity(0.2),
+                    ),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+                  child: Row(
+                    spacing: 10,
+                    children: [
+                      HeroIcon(
+                        HeroIcons.informationCircle,
+                        color: AppColors.primaryDark.withOpacity(0.8),
+                      ),
+                      Expanded(
+                        child: Text(
+                          'Para escribir funciones como x^2 + 2x + 1, escriba: x^2 + 2*x + 1',
+                          style: AppFonts.bodyText5.copyWith(
+                            color: AppColors.primaryDark.withOpacity(0.8),
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.visible,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 15),
                 CustomTextField(
                   label: 'Función f(x)',
                   hint: 'Ej: x^3 - 4*x - 9',
