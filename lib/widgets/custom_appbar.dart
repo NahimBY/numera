@@ -50,13 +50,11 @@ class CustomAppBar extends StatelessWidget {
                   right: 20.0,
                 ),
                 centerTitle: false,
-                title: Expanded(
-                  child: Text(
-                    title,
-                    style: AppFonts.appBarTitle.copyWith(fontSize: 20),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                title: Text(
+                  title,
+                  style: AppFonts.appBarTitle.copyWith(fontSize: 20),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
                 expandedTitleScale: 1.2,
               ),
