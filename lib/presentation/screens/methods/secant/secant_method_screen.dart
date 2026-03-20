@@ -4,6 +4,7 @@ import 'package:heroicons/heroicons.dart';
 import 'package:numera/config/theme/app_theme.dart';
 import 'package:numera/widgets/custom_button.dart';
 import 'package:numera/widgets/custom_text_field.dart';
+import 'package:numera/widgets/custom_appbar.dart';
 import 'cubit/secant_cubit.dart';
 import 'cubit/secant_state.dart';
 import 'secant_logic.dart';
@@ -34,10 +35,6 @@ class _SecantMethodView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Método de la Secante'),
-        backgroundColor: Colors.transparent,
-      ),
       body: BlocConsumer<SecantCubit, SecantState>(
         listener: (context, state) {
           if (state is SecantError) {
@@ -50,214 +47,228 @@ class _SecantMethodView extends StatelessWidget {
           }
         },
         builder: (context, state) {
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: AppColors.primaryDark.withOpacity(0.05),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: AppColors.primaryDark.withOpacity(0.2),
-                    ),
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-                  child: Row(
-                    spacing: 10,
+          return CustomScrollView(
+            slivers: [
+              const CustomAppBar(title: 'Método de la Secante'),
+              SliverToBoxAdapter(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      HeroIcon(
-                        HeroIcons.informationCircle,
-                        color: AppColors.primaryDark.withOpacity(0.8),
-                      ),
-                      Expanded(
-                        child: Text(
-                          'Para escribir funciones como x^2 + 2x + 1, escriba: x^2 + 2*x + 1',
-                          style: AppFonts.bodyText5.copyWith(
-                            color: AppColors.primaryDark.withOpacity(0.8),
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.visible,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 15),
-                CustomTextField(
-                  label: 'Función f(x)',
-                  hint: 'Ejemplo: x^2 - 4',
-                  controller: functionCtrl,
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: CustomTextField(
-                        label: 'Punto Inicial x0',
-                        hint: 'Ej. 1',
-                        controller: x0Ctrl,
-                        keyboardType: const TextInputType.numberWithOptions(
-                          decimal: true,
-                          signed: true,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: CustomTextField(
-                        label: 'Punto Inicial x1',
-                        hint: 'Ej. 2',
-                        controller: x1Ctrl,
-                        keyboardType: const TextInputType.numberWithOptions(
-                          decimal: true,
-                          signed: true,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: CustomTextField(
-                        label: 'Tolerancia',
-                        hint: 'Ej. 0.001',
-                        controller: tolCtrl,
-                        keyboardType: const TextInputType.numberWithOptions(
-                          decimal: true,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: CustomTextField(
-                        label: 'Iteraciones',
-                        hint: 'Ej. 50',
-                        controller: iterCtrl,
-                        keyboardType: TextInputType.number,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 24),
-                Row(
-                  children: [
-                    Expanded(
-                      child: CustomButton(
-                        text: 'Calcular',
-                        isLoading: state is SecantCalculating,
-                        onPressed: () {
-                          FocusScope.of(context).unfocus();
-
-                          context.read<SecantCubit>().calculate(
-                            function: functionCtrl.text,
-                            x0Str: x0Ctrl.text,
-                            x1Str: x1Ctrl.text,
-                            toleranceStr: tolCtrl.text,
-                            maxIterationsStr: iterCtrl.text,
-                          );
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: CustomButton(
-                        text: 'Limpiar',
-                        isMainButton: false,
-                        isLoading: state is SecantCalculating,
-                        onPressed: () {
-                          FocusScope.of(context).unfocus();
-                          functionCtrl.clear();
-                          x0Ctrl.clear();
-                          x1Ctrl.clear();
-                          tolCtrl.clear();
-                          iterCtrl.clear();
-                          context.read<SecantCubit>().clear();
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 32),
-                if (state is SecantSuccess) ...[
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryDark.withOpacity(0.05),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: AppColors.primaryDark.withOpacity(0.2),
-                      ),
-                    ),
-                    child: Column(
-                      children: [
-                        Text(
-                          'Raíz aproximada (xr)',
-                          style: AppFonts.headline6.copyWith(
-                            color: AppColors.textDarkGray,
+                      Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryDark.withOpacity(0.05),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: AppColors.primaryDark.withOpacity(0.2),
                           ),
                         ),
-                        const SizedBox(height: 8),
-                        Text(
-                          state.root.toStringAsFixed(6),
-                          style: AppFonts.headline1.copyWith(
-                            color: AppColors.success,
-                          ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 15,
+                          vertical: 20,
                         ),
-                        const SizedBox(height: 10),
-                        const Divider(),
-                        const SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        child: Row(
+                          spacing: 10,
                           children: [
-                            Column(
-                              children: [
-                                Text(
-                                  'Iteraciones',
-                                  style: AppFonts.bodyText5.copyWith(
-                                    color: AppColors.textGray,
-                                  ),
-                                ),
-                                Text(
-                                  state.totalIterations.toString(),
-                                  style: AppFonts.headline4,
-                                ),
-                              ],
+                            HeroIcon(
+                              HeroIcons.informationCircle,
+                              color: AppColors.primaryDark.withOpacity(0.8),
                             ),
-                            Container(
-                              width: 1,
-                              height: 40,
-                              color: AppColors.fillPaleGray,
-                            ),
-                            Column(
-                              children: [
-                                Text(
-                                  'Error final',
-                                  style: AppFonts.bodyText5.copyWith(
-                                    color: AppColors.textGray,
-                                  ),
+                            Expanded(
+                              child: Text(
+                                'Para escribir funciones como x² + 2x + 1, escriba: x^2 + 2*x + 1',
+                                style: AppFonts.bodyText5.copyWith(
+                                  color: AppColors.primaryDark.withOpacity(0.8),
                                 ),
-                                Text(
-                                  '${(state.finalError * 100).toStringAsFixed(4)}%',
-                                  style: AppFonts.headline4,
-                                ),
-                              ],
+                                maxLines: 2,
+                                overflow: TextOverflow.visible,
+                              ),
                             ),
                           ],
                         ),
+                      ),
+                      const SizedBox(height: 15),
+                      CustomTextField(
+                        label: 'Función f(x)',
+                        hint: 'Ejemplo: x^2 - 4',
+                        controller: functionCtrl,
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: CustomTextField(
+                              label: 'Punto Inicial x0',
+                              hint: 'Ej. 1',
+                              controller: x0Ctrl,
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                    decimal: true,
+                                    signed: true,
+                                  ),
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: CustomTextField(
+                              label: 'Punto Inicial x1',
+                              hint: 'Ej. 2',
+                              controller: x1Ctrl,
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                    decimal: true,
+                                    signed: true,
+                                  ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: CustomTextField(
+                              label: 'Tolerancia',
+                              hint: 'Ej. 0.001',
+                              controller: tolCtrl,
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                    decimal: true,
+                                  ),
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: CustomTextField(
+                              label: 'Iteraciones',
+                              hint: 'Ej. 50',
+                              controller: iterCtrl,
+                              keyboardType: TextInputType.number,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 24),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: CustomButton(
+                              text: 'Calcular',
+                              isLoading: state is SecantCalculating,
+                              onPressed: () {
+                                FocusScope.of(context).unfocus();
+
+                                context.read<SecantCubit>().calculate(
+                                  function: functionCtrl.text,
+                                  x0Str: x0Ctrl.text,
+                                  x1Str: x1Ctrl.text,
+                                  toleranceStr: tolCtrl.text,
+                                  maxIterationsStr: iterCtrl.text,
+                                );
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: CustomButton(
+                              text: 'Limpiar',
+                              isMainButton: false,
+                              isLoading: state is SecantCalculating,
+                              onPressed: () {
+                                FocusScope.of(context).unfocus();
+                                functionCtrl.clear();
+                                x0Ctrl.clear();
+                                x1Ctrl.clear();
+                                tolCtrl.clear();
+                                iterCtrl.clear();
+                                context.read<SecantCubit>().clear();
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 32),
+                      if (state is SecantSuccess) ...[
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryDark.withOpacity(0.05),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: AppColors.primaryDark.withOpacity(0.2),
+                            ),
+                          ),
+                          child: Column(
+                            children: [
+                              Text(
+                                'Raíz aproximada (xr)',
+                                style: AppFonts.headline6.copyWith(
+                                  color: AppColors.textDarkGray,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                state.root.toStringAsFixed(6),
+                                style: AppFonts.headline1.copyWith(
+                                  color: AppColors.success,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              const Divider(),
+                              const SizedBox(height: 10),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Column(
+                                    children: [
+                                      Text(
+                                        'Iteraciones',
+                                        style: AppFonts.bodyText5.copyWith(
+                                          color: AppColors.textGray,
+                                        ),
+                                      ),
+                                      Text(
+                                        state.totalIterations.toString(),
+                                        style: AppFonts.headline4,
+                                      ),
+                                    ],
+                                  ),
+                                  Container(
+                                    width: 1,
+                                    height: 40,
+                                    color: AppColors.fillPaleGray,
+                                  ),
+                                  Column(
+                                    children: [
+                                      Text(
+                                        'Error final',
+                                        style: AppFonts.bodyText5.copyWith(
+                                          color: AppColors.textGray,
+                                        ),
+                                      ),
+                                      Text(
+                                        '${(state.finalError * 100).toStringAsFixed(4)}%',
+                                        style: AppFonts.headline4,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        Text('Tabla de Resultados:', style: AppFonts.headline5),
+                        const SizedBox(height: 10),
+                        _SecantResultsTable(iterations: state.iterations),
                       ],
-                    ),
+                    ],
                   ),
-                  const SizedBox(height: 20),
-                  Text('Tabla de Resultados:', style: AppFonts.headline5),
-                  const SizedBox(height: 10),
-                  _SecantResultsTable(iterations: state.iterations),
-                ],
-              ],
-            ),
+                ),
+              ),
+            ],
           );
         },
       ),
@@ -279,7 +290,9 @@ class _SecantResultsTable extends StatelessWidget {
           (states) => AppColors.primaryDark.withOpacity(0.1),
         ),
         dataRowMaxHeight: double.infinity,
-        headingTextStyle: AppFonts.headline8.copyWith(color: AppColors.primaryDark),
+        headingTextStyle: AppFonts.headline8.copyWith(
+          color: AppColors.primaryDark,
+        ),
         dataTextStyle: AppFonts.bodyText2,
         columns: const [
           DataColumn(label: Text('Iter')),

@@ -102,7 +102,7 @@ class AppFonts {
   // miscellaneous
   //********************/
   static TextStyle appBarTitle = GoogleFonts.montserrat(
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: FontWeight.bold,
     color: AppColors.textBlack,
   );
